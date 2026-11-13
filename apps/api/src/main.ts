@@ -3,9 +3,10 @@ import { Module } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Database } from './database';
 import { HealthController } from './health.controller';
+import { StockReceiptsController } from './inventory/stock-receipts.controller';
 
 @Module({
-  controllers: [HealthController],
+  controllers: [HealthController, StockReceiptsController],
   providers: [Database],
 })
 class AppModule {}

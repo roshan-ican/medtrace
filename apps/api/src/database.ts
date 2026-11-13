@@ -1,5 +1,6 @@
 import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { Pool } from 'pg';
+import { receiveStock, type ReceiveStockInput } from './inventory/receive-stock';
 
 @Injectable()
 export class Database implements OnApplicationShutdown {
@@ -21,6 +22,10 @@ export class Database implements OnApplicationShutdown {
 
   async ping(): Promise<void> {
     await this.pool.query('SELECT 1');
+  }
+
+  receiveStock(input: ReceiveStockInput) {
+    return receiveStock(this.pool, input);
   }
 
   async onApplicationShutdown(): Promise<void> {
