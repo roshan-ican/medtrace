@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+  background: #f4f7f6;
+  color: #152d27;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+main {
+  max-width: 42rem;
+  margin: 12vh auto 0;
+  padding: 2rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  letter-spacing: -0.045em;
+}
+
+[role="status"] {
+  border-top: 1px solid #baccc6;
+  margin-top: 2rem;
+  padding-top: 1rem;
+}
