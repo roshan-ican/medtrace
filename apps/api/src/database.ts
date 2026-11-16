@@ -2,6 +2,8 @@ import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { Pool } from 'pg';
 import { receiveStock, type ReceiveStockInput } from './inventory/receive-stock';
 import { getBatch } from './inventory/get-batch';
+import { recallBatch, type RecallBatchInput } from './inventory/recall-batch';
+import { transferStock, type TransferStockInput } from './inventory/transfer-stock';
 
 
 @Injectable()
@@ -32,6 +34,14 @@ export class Database implements OnApplicationShutdown {
 
   getBatch(batchId: number) {
     return getBatch(this.pool, batchId);
+  }
+
+  transferStock(input: TransferStockInput) {
+    return transferStock(this.pool, input);
+  }
+
+  recallBatch(input: RecallBatchInput) {
+    return recallBatch(this.pool, input);
   }
 
   async onApplicationShutdown(): Promise<void> {

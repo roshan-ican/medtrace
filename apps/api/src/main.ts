@@ -5,8 +5,11 @@ import { Database } from './database';
 import { HealthController } from './health.controller';
 import { StockReceiptsController } from './inventory/stock-receipts.controller';
 import { BatchesController } from './inventory/batches.controller';
+import { BatchRecallsController } from './inventory/batch-recalls.controller';
+import { StockTransfersController } from './inventory/stock-transfers.controller';
+
 @Module({
-  controllers: [HealthController, StockReceiptsController, BatchesController],
+  controllers: [HealthController, StockReceiptsController, BatchesController, StockTransfersController, BatchRecallsController],
   providers: [Database],
 })
 class AppModule {}

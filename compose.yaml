@@ -15,14 +15,34 @@ services:
       timeout: 3s
       retries: 12
 
+  aws-emulator:
+    build: ./infra/aws-emulator
+    environment:
+      EMULATOR_TELEMETRY: "off"
+    ports:
+      - "127.0.0.1:9297:9297"
+    volumes:
+      - aws_emulator_connection:/home/emulator/.aws/emulator/9297
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "--cacert", "/home/emulator/.aws/emulator/9297/ca.pem", "https://127.0.0.1:9297/__admin/health"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
   api:
     build:
       context: .
       target: api
     environment:
       DATABASE_URL: postgres://medtrace:medtrace_dev@db:5432/medtrace
+    volumes:
+      - aws_emulator_connection:/run/aws-emulator:ro
     depends_on:
       db:
+        condition: service_healthy
+      aws-emulator:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
@@ -49,3 +69,4 @@ services:
 
 volumes:
   postgres_data:
+  aws_emulator_connection:

@@ -7,11 +7,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { Database } from '../database';
+import { BatchRecalledError } from './assert-batch-not-recalled';
+import { isPositiveInteger } from './is-positive-integer';
 import type { ReceiveStockInput } from './receive-stock';
-
-function isPositiveInteger(value: unknown): value is number {
-  return typeof value === 'number' && Number.isInteger(value) && value > 0 && value <= 2_147_483_647;
-}
 
 @Controller('stock-receipts')
 export class StockReceiptsController {
@@ -27,6 +25,9 @@ export class StockReceiptsController {
     try {
       return await this.database.receiveStock({ batchId, locationId, quantity });
     } catch (error) {
+      if (error instanceof BatchRecalledError) {
+        throw new ConflictException(error.message);
+      }
       const code = (error as { code?: string } | null)?.code;
       if (code === '23503') {
         throw new NotFoundException('Batch or location does not exist');

@@ -1,4 +1,5 @@
 import type { Pool } from 'pg';
+import { assertBatchNotRecalled } from './assert-batch-not-recalled';
 
 export interface ReceiveStockInput {
     batchId: number;
@@ -13,7 +14,7 @@ export async function receiveStock(pool: Pool, input: ReceiveStockInput) {
 
     try {
         await client.query('BEGIN');
-
+        await assertBatchNotRecalled(client, input.batchId);
         const receipt = await client.query<{ id: number }>(
             /* sql */ `INSERT INTO stock_receipts (batch_id, location_id, quantity)
        VALUES ($1, $2, $3)
