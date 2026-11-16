@@ -1,6 +1,8 @@
 import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { Pool } from 'pg';
 import { receiveStock, type ReceiveStockInput } from './inventory/receive-stock';
+import { getBatch } from './inventory/get-batch';
+
 
 @Injectable()
 export class Database implements OnApplicationShutdown {
@@ -26,6 +28,10 @@ export class Database implements OnApplicationShutdown {
 
   receiveStock(input: ReceiveStockInput) {
     return receiveStock(this.pool, input);
+  }
+
+  getBatch(batchId: number) {
+    return getBatch(this.pool, batchId);
   }
 
   async onApplicationShutdown(): Promise<void> {

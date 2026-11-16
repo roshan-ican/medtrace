@@ -15,14 +15,14 @@ export async function receiveStock(pool: Pool, input: ReceiveStockInput) {
         await client.query('BEGIN');
 
         const receipt = await client.query<{ id: number }>(
-            `INSERT INTO stock_receipts (batch_id, location_id, quantity)
+            /* sql */ `INSERT INTO stock_receipts (batch_id, location_id, quantity)
        VALUES ($1, $2, $3)
        RETURNING id`,
             values,
         );
 
         const balance = await client.query<{ quantity: number }>(
-            `INSERT INTO stock_balances (batch_id, location_id, quantity)
+            /* sql */ `INSERT INTO stock_balances (batch_id, location_id, quantity)
        VALUES ($1, $2, $3)
        ON CONFLICT (batch_id, location_id)
        DO UPDATE SET quantity = stock_balances.quantity + EXCLUDED.quantity

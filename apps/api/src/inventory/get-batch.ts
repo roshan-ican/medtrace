@@ -24,7 +24,7 @@ export async function getBatch(
   batchId: number,
 ): Promise<BatchDetails | null> {
   const result = await pool.query<BatchDetails>(
-    `SELECT
+    /* sql */ `SELECT
        b.id,
        b.medicine_name AS "medicineName",
        b.manufacturer,
